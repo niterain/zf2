@@ -13,11 +13,14 @@
     },
     "require-dev": {
         "doctrine/common": ">=2.1",
+        "ircmaxell/random-lib": "dev-master",
+        "ircmaxell/security-lib": "dev-master",
         "phpunit/PHPUnit": "3.7.*"
     },
     "suggest": {
         "doctrine/common": "Doctrine\\Common >=2.1 for annotation features",
         "ext-intl": "ext/intl for i18n features",
+        "ircmaxell/random-lib": "Fallback random byte generator for Zend\\Math\\Rand if OpenSSL/Mcrypt extensions are unavailable",
         "pecl-weakref": "Implementation of weak references for Zend\\Stdlib\\CallbackHandler",
         "zendframework/zendpdf": "ZendPdf for creating PDF representations of barcodes",
         "zendframework/zendservice-recaptcha": "ZendService\\ReCaptcha for rendering ReCaptchas in Zend\\Captcha and/or Zend\\Form"
@@ -66,6 +69,7 @@
         "zendframework/zend-navigation": "self.version",
         "zendframework/zend-paginator": "self.version",
         "zendframework/zend-permissions-acl": "self.version",
+        "zendframework/zend-permissions-rbac": "self.version",
         "zendframework/zend-progressbar": "self.version",
         "zendframework/zend-serializer": "self.version",
         "zendframework/zend-server": "self.version",
@@ -74,6 +78,7 @@
         "zendframework/zend-soap": "self.version",
         "zendframework/zend-stdlib": "self.version",
         "zendframework/zend-tag": "self.version",
+        "zendframework/zend-test": "self.version",
         "zendframework/zend-text": "self.version",
         "zendframework/zend-uri": "self.version",
         "zendframework/zend-validator": "self.version",
@@ -83,8 +88,8 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "2.0-dev",
-            "dev-develop": "2.1-dev"
+            "dev-master": "2.1-dev",
+            "dev-develop": "2.2-dev"
         }
     }
 }

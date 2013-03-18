@@ -75,7 +75,22 @@ class SqlServerTest extends \PHPUnit_Framework_TestCase
      */
     public function testQuoteValue()
     {
+        $this->setExpectedException(
+            'PHPUnit_Framework_Error',
+            'Attempting to quote a value in Zend\Db\Adapter\Platform\SqlServer without extension/driver support can introduce security vulnerabilities in a production environment'
+        );
         $this->assertEquals("'value'", $this->platform->quoteValue('value'));
+    }
+
+    /**
+     * @covers Zend\Db\Adapter\Platform\SqlServer::quoteTrustedValue
+     */
+    public function testQuoteTrustedValue()
+    {
+        $this->assertEquals("'value'", $this->platform->quoteTrustedValue('value'));
+        $this->assertEquals("'Foo O''Bar'", $this->platform->quoteTrustedValue("Foo O'Bar"));
+        $this->assertEquals("'''; DELETE FROM some_table; -- '", $this->platform->quoteTrustedValue('\'; DELETE FROM some_table; -- '));
+        $this->assertEquals("'\\''; DELETE FROM some_table; -- '", $this->platform->quoteTrustedValue('\\\'; DELETE FROM some_table; -- '));
     }
 
     /**
@@ -83,9 +98,11 @@ class SqlServerTest extends \PHPUnit_Framework_TestCase
      */
     public function testQuoteValueList()
     {
+        $this->setExpectedException(
+            'PHPUnit_Framework_Error',
+            'Attempting to quote a value in Zend\Db\Adapter\Platform\SqlServer without extension/driver support can introduce security vulnerabilities in a production environment'
+        );
         $this->assertEquals("'Foo O''Bar'", $this->platform->quoteValueList("Foo O'Bar"));
-        $this->assertEquals("'Foo O''Bar'", $this->platform->quoteValueList(array("Foo O'Bar")));
-        $this->assertEquals("'value', 'Foo O''Bar'", $this->platform->quoteValueList(array('value',"Foo O'Bar")));
     }
 
     /**
@@ -103,14 +120,14 @@ class SqlServerTest extends \PHPUnit_Framework_TestCase
     {
         $this->assertEquals('[foo].[bar]', $this->platform->quoteIdentifierInFragment('foo.bar'));
         $this->assertEquals('[foo] as [bar]', $this->platform->quoteIdentifierInFragment('foo as bar'));
-    }
 
-    /**
-     * @group ZF2-386
-     * @covers Zend\Db\Adapter\Platform\SqlServer::quoteIdentifierInFragment
-     */
-    public function testQuoteIdentifierInFragmentIgnoresSingleCharSafeWords()
-    {
+        // single char words
         $this->assertEquals('([foo].[bar] = [boo].[baz])', $this->platform->quoteIdentifierInFragment('(foo.bar = boo.baz)', array('(', ')', '=')));
+
+        // case insensitive safe words
+        $this->assertEquals(
+            '([foo].[bar] = [boo].[baz]) AND ([foo].[baz] = [boo].[baz])',
+            $this->platform->quoteIdentifierInFragment('(foo.bar = boo.baz) AND (foo.baz = boo.baz)', array('(', ')', '=', 'and'))
+        );
     }
 }

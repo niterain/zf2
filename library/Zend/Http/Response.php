@@ -5,7 +5,6 @@
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Http
  */
 
 namespace Zend\Http;
@@ -16,8 +15,6 @@ use Zend\Stdlib\ResponseInterface;
 /**
  * HTTP Response
  *
- * @category  Zend
- * @package   Zend_Http
  * @link      http://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6
  */
 class Response extends AbstractMessage implements ResponseInterface
@@ -511,7 +508,7 @@ class Response extends AbstractMessage implements ResponseInterface
          * Some servers (IIS ?) send a broken deflate response, without the
          * RFC-required zlib header.
          *
-         * We try to detect the zlib header, and if it does not exsit we
+         * We try to detect the zlib header, and if it does not exist we
          * teat the body is plain DEFLATE content.
          *
          * This method was adapted from PEAR HTTP_Request2 by (c) Alexey Borzov

@@ -71,6 +71,36 @@ class TranslatorTest extends TestCase
         $this->assertEquals('de_DE', $translator->getLocale());
     }
 
+    public function testTranslationFromSeveralTranslationFiles()
+    {
+        $translator = Translator::factory(array(
+            'locale' => 'de_DE',
+            'translation_file_patterns' => array(
+                array(
+                    'type' => 'phparray',
+                    'base_dir' => $this->testFilesDir . '/testarray',
+                    'pattern' => 'translation-%s.php'
+                ),
+                array(
+                    'type' => 'phparray',
+                    'base_dir' => $this->testFilesDir . '/testarray',
+                    'pattern' => 'translation-more-%s.php'
+                )
+            )
+        ));
+
+        //Test translator instance
+        $this->assertInstanceOf('Zend\I18n\Translator\Translator', $translator);
+
+        //Test translations
+        $this->assertEquals('Nachricht 1', $translator->translate('Message 1')); //translation-de_DE.php
+        $this->assertEquals('Nachricht 9', $translator->translate('Message 9')); //translation-more-de_DE.php
+        $this->assertEquals('Nachricht 10 - 0', $translator->translatePlural('Message 10', 'Message 10', 1)); //translation-de_DE.php
+        $this->assertEquals('Nachricht 10 - 1', $translator->translatePlural('Message 10', 'Message 10', 2)); //translation-de_DE.php
+        $this->assertEquals('Nachricht 11 - 0', $translator->translatePlural('Message 11', 'Message 11', 1)); //translation-more-de_DE.php
+        $this->assertEquals('Nachricht 11 - 1', $translator->translatePlural('Message 11', 'Message 11', 2)); //translation-more-de_DE.php
+    }
+
     public function testFactoryCreatesTranslatorWithCache()
     {
         $translator = Translator::factory(array(
@@ -159,5 +189,26 @@ class TranslatorTest extends TestCase
         $this->assertEquals('Message 5 (en) Plural 0', $pl0);
         $this->assertEquals('Message 5 (en) Plural 1', $pl1);
         $this->assertEquals('Message 5 (en) Plural 2', $pl2);
+    }
+
+    public function testTranslateNonExistantLocale()
+    {
+        $this->translator->addTranslationFilePattern(
+            'phparray',
+            $this->testFilesDir . '/testarray',
+            'translation-%s.php'
+        );
+
+        // Test that a locale without translations does not cause warnings
+
+        $this->translator->setLocale('es_ES');
+
+        $this->assertEquals('Message 1', $this->translator->translate('Message 1'));
+        $this->assertEquals('Message 9', $this->translator->translate('Message 9'));
+
+        $this->translator->setLocale('fr_FR');
+
+        $this->assertEquals('Message 1', $this->translator->translate('Message 1'));
+        $this->assertEquals('Message 9', $this->translator->translate('Message 9'));
     }
 }
