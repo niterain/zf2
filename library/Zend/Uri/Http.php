@@ -5,16 +5,12 @@
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Uri
  */
 
 namespace Zend\Uri;
 
 /**
  * HTTP URI handler
- *
- * @category  Zend
- * @package   Zend_Uri
  */
 class Http extends Uri
 {
@@ -37,7 +33,7 @@ class Http extends Uri
     /**
      * @see Uri::$validHostTypes
      */
-    protected $validHostTypes = self::HOST_DNS_OR_IPV4_OR_IPV6;
+    protected $validHostTypes = self::HOST_DNS_OR_IPV4_OR_IPV6_OR_REGNAME;
 
     /**
      * User name as provided in authority of URI

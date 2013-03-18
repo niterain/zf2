@@ -5,7 +5,6 @@
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Filter
  */
 
 namespace Zend\Filter\Encrypt;
@@ -21,9 +20,6 @@ use Zend\Crypt\Symmetric\Exception as SymmetricException;
 
 /**
  * Encryption adapter for Zend\Crypt\BlockCipher
- *
- * @category   Zend
- * @package    Zend_Filter
  */
 class BlockCipher implements EncryptionAlgorithmInterface
 {
@@ -60,7 +56,7 @@ class BlockCipher implements EncryptionAlgorithmInterface
     /**
      * Class constructor
      *
-     * @param  string|array|\Traversable $options Encryption Options
+     * @param  string|array|Traversable $options Encryption Options
      * @throws Exception\RuntimeException
      * @throws Exception\InvalidArgumentException
      */
@@ -254,8 +250,6 @@ class BlockCipher implements EncryptionAlgorithmInterface
         try {
             $encrypted = $this->blockCipher->encrypt($value);
         } catch (CryptException\InvalidArgumentException $e) {
-            throw new Exception\InvalidArgumentException($e->getMessage());
-        } catch (SymmetricException\InvalidArgumentException $e) {
             throw new Exception\InvalidArgumentException($e->getMessage());
         }
         return $encrypted;

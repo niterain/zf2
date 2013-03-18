@@ -5,21 +5,17 @@
  * @link      http://github.com/zendframework/zf2 for the canonical source repository
  * @copyright Copyright (c) 2005-2013 Zend Technologies USA Inc. (http://www.zend.com)
  * @license   http://framework.zend.com/license/new-bsd New BSD License
- * @package   Zend_Stdlib
  */
 
 namespace Zend\Stdlib;
 
 use ArrayIterator;
-use ArrayObject;
+use ArrayObject as PhpArrayObject;
 
 /**
  * ArrayObject that acts as a stack with regards to iteration
- *
- * @category   Zend
- * @package    Zend_Stdlib
  */
-class ArrayStack extends ArrayObject
+class ArrayStack extends PhpArrayObject
 {
     /**
      * Retrieve iterator

@@ -259,6 +259,20 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($response->isError());
     }
 
+    public function testHandleValidMethodWithNULLParamValueShouldWork()
+    {
+        $this->server->setClass('ZendTest\\Json\\Foo')
+                     ->addFunction('ZendTest\\Json\\FooFunc')
+                     ->setReturnResponse(true);
+        $request = $this->server->getRequest();
+        $request->setMethod('bar')
+                ->setParams(array(true, NULL, 'bar'))
+                ->setId('foo');
+        $response = $this->server->handle();
+        $this->assertTrue($response instanceof Response);
+        $this->assertFalse($response->isError());
+    }
+
     public function testHandleValidMethodWithTooFewParamsShouldPassDefaultsOrNullsForMissingParams()
     {
         $this->server->setClass('ZendTest\Json\Foo')
@@ -266,6 +280,24 @@ class ServerTest extends \PHPUnit_Framework_TestCase
         $request = $this->server->getRequest();
         $request->setMethod('bar')
                 ->setParams(array(true))
+                ->setId('foo');
+        $response = $this->server->handle();
+        $this->assertTrue($response instanceof Response);
+        $this->assertFalse($response->isError());
+        $result = $response->getResult();
+        $this->assertTrue(is_array($result));
+        $this->assertTrue(3 == count($result));
+        $this->assertEquals('two', $result[1], var_export($result, 1));
+        $this->assertNull($result[2]);
+    }
+
+    public function testHandleValidMethodWithTooFewAssociativeParamsShouldPassDefaultsOrNullsForMissingParams()
+    {
+        $this->server->setClass('ZendTest\Json\Foo')
+                     ->setReturnResponse(true);
+        $request = $this->server->getRequest();
+        $request->setMethod('bar')
+                ->setParams(array('one' => true))
                 ->setId('foo');
         $response = $this->server->handle();
         $this->assertTrue($response instanceof Response);

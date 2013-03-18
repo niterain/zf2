@@ -158,6 +158,7 @@ class TreeRouteStackTest extends TestCase
 
     public function testAssembleCanonicalUriWithHostnameRouteAndQueryRoute()
     {
+        $this->markTestSkipped('Query route part has been deprecated in ZF as of 2.1.4');
         $uri   = new HttpUri();
         $uri->setScheme('http');
         $stack = new TreeRouteStack();
@@ -190,6 +191,7 @@ class TreeRouteStackTest extends TestCase
 
     public function testAssembleWithQueryRoute()
     {
+        $this->markTestSkipped('Query route part has been deprecated in ZF as of 2.1.4');
         $uri   = new HttpUri();
         $uri->setScheme('http');
         $stack = new TreeRouteStack();
@@ -210,6 +212,65 @@ class TreeRouteStackTest extends TestCase
         );
 
         $this->assertEquals('/?bar=baz', $stack->assemble(array('bar' => 'baz'), array('name' => 'index/query')));
+    }
+
+    public function testAssembleWithQueryParams()
+    {
+        $stack = new TreeRouteStack();
+        $stack->addRoute(
+            'index',
+            array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/',
+                ),
+            )
+        );
+
+        $this->assertEquals('/?foo=bar', $stack->assemble(array(), array('name' => 'index', 'query' => array('foo' => 'bar'))));
+    }
+
+    public function testAssembleWithScheme()
+    {
+        $uri   = new HttpUri();
+        $uri->setScheme('http');
+        $uri->setHost('example.com');
+        $stack = new TreeRouteStack();
+        $stack->setRequestUri($uri);
+        $stack->addRoute(
+            'secure',
+            array(
+                'type' => 'Scheme',
+                'options' => array(
+                    'scheme' => 'https'
+                ),
+                'child_routes' => array(
+                    'index' => array(
+                        'type'    => 'Literal',
+                        'options' => array(
+                            'route'    => '/',
+                        ),
+                    ),
+                ),
+            )
+        );
+        $this->assertEquals('https://example.com/', $stack->assemble(array(), array('name' => 'secure/index')));
+    }
+
+    public function testAssembleWithFragment()
+    {
+        $stack = new TreeRouteStack();
+        $stack->addRoute(
+            'index',
+            array(
+                'type' => 'Literal',
+                'options' => array(
+                    'route' => '/',
+                ),
+            )
+        );
+
+        $this->assertEquals('/#foobar', $stack->assemble(array(), array('name' => 'index', 'fragment' => 'foobar')));
     }
 
     public function testAssembleWithoutNameOption()
